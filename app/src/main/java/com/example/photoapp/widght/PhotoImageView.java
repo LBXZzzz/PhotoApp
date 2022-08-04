@@ -211,6 +211,15 @@ public class PhotoImageView extends AppCompatImageView {
         public boolean onScale(ScaleGestureDetector detector) {
             //通过detector我们可以拿到缩放因子
             mCurrentScale = initialScale * detector.getScaleFactor();
+            if(mCurrentScale>mSmallScale){
+                isBigScale=true;
+            }
+            if(mCurrentScale>mBigScale*1.5f){
+                mCurrentScale=mBigScale*1.5f;
+            }
+            if(mCurrentScale<mSmallScale){
+                mCurrentScale=mSmallScale;
+            }
             invalidate();
             return false;
         }

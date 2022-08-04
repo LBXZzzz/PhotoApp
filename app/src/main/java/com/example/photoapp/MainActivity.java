@@ -42,7 +42,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        fileImgBeans=MainActivity.getImgList(this);
+        /*fileImgBeans=MainActivity.getImgList(this);
         Log.d("zwy","FileImgBean"+fileImgBeans.get(0).getFilePath());
         RecyclerView recyclerView =findViewById(R.id.rv_photo);
         StaggeredGridLayoutManager mLayoutManager = new StaggeredGridLayoutManager(
@@ -52,7 +52,7 @@ public class MainActivity extends AppCompatActivity {
         recyclerView.setItemAnimator(new DefaultItemAnimator());
         Log.d("zwyuu",String.valueOf(filePath2.size()));
         PhotoRecyclerAdapter photoRecyclerAdapter=new PhotoRecyclerAdapter(this,filePath2);
-        recyclerView.setAdapter(photoRecyclerAdapter);
+        recyclerView.setAdapter(photoRecyclerAdapter);*/
     }
 
     /**
