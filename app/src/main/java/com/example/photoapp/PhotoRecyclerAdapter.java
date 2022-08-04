@@ -32,7 +32,7 @@ public class PhotoRecyclerAdapter extends RecyclerView.Adapter<PhotoRecyclerAdap
 
     @Override
     public void onBindViewHolder(@NonNull PhotoRecyclerAdapter.ViewHolder holder, int position) {
-        Picasso.with(mContext).load(mUriList.get(position)).resize(150,150).into(((ViewHolder)holder).imageView);
+        Picasso.with(mContext).load(mUriList.get(position)).fit().into(((ViewHolder)holder).imageView);
 //        ((ViewHolder)holder).imageView.setImageURI(mUriList.get(position));
     }
 

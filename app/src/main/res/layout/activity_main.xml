@@ -7,6 +7,11 @@
     android:orientation="vertical"
     tools:context=".MainActivity">
 
+    <com.example.photoapp.widght.PhotoViewPaper
+        android:id="@+id/vp"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"/>
+
     <com.example.photoapp.widght.PhotoImageView
         android:id="@+id/iv1"
         android:layout_width="match_parent"

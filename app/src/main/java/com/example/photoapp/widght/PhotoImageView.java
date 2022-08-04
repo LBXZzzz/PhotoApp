@@ -10,6 +10,7 @@ import android.graphics.Canvas;
 
 import android.graphics.Paint;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.ScaleGestureDetector;
@@ -22,10 +23,6 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.photoapp.R;
 
 
-/**
- * 对图片进行放大缩小
- * Created by acer-pc on 2018/8/21.
- */
 
 public class PhotoImageView extends AppCompatImageView {
 
@@ -99,6 +96,7 @@ public class PhotoImageView extends AppCompatImageView {
     private OverScroller mOverScroller;
     private ScaleGestureDetector mScaleGestureDetector;
 
+
     @Override
     protected void onSizeChanged(int w, int h, int oldw, int oldh) {
         super.onSizeChanged(w, h, oldw, oldh);
@@ -138,9 +136,21 @@ public class PhotoImageView extends AppCompatImageView {
 
         @Override
         public boolean onScroll(MotionEvent e1, MotionEvent e2, float distanceX, float distanceY) {
+            int pointerCount = e1.getPointerCount();
             if (mCurrentScale > mSmallScale) {
-                mOffsetX -= distanceX;
-                mOffsetY -= distanceY;
+                if(pointerCount==2){
+                    float x1=e2.getX(0);
+                    float x2=e2.getX(1);
+                    float y1=e2.getY(0);
+                    float y2=e2.getY(1);
+                    float x=(x1+x2)/2f;
+                    float y=(y1+y2)/2f;
+                    mOffsetX=x;
+                    mOffsetY=y;
+                }
+                Log.d("zwyuu",String.valueOf(mCurrentScale));
+                mOffsetX -= distanceX/mCurrentScale;
+                mOffsetY -= distanceY/mCurrentScale;
                 measureOffset();
                 invalidate();
             }
@@ -155,7 +165,7 @@ public class PhotoImageView extends AppCompatImageView {
                         (int) ((mBitmap.getWidth() * mBigScale - getWidth()) / 2f),
                         -(int) ((mBitmap.getHeight() * mBigScale - getHeight()) / 2f),
                         (int) ((mBitmap.getHeight() * mBigScale - getHeight()) / 2f),
-                        100, 100);
+                        0, 0);
                 postOnAnimation(new FlingRunner());
             }
             return super.onFling(e1, e2, velocityX, velocityY);
@@ -214,8 +224,8 @@ public class PhotoImageView extends AppCompatImageView {
             if(mCurrentScale>mSmallScale){
                 isBigScale=true;
             }
-            if(mCurrentScale>mBigScale*1.5f){
-                mCurrentScale=mBigScale*1.5f;
+            if(mCurrentScale>mBigScale*2f){
+                mCurrentScale=mBigScale*2f;
             }
             if(mCurrentScale<mSmallScale){
                 mCurrentScale=mSmallScale;
@@ -237,5 +247,16 @@ public class PhotoImageView extends AppCompatImageView {
         public void onScaleEnd(ScaleGestureDetector detector) {
 
         }
+    }
+
+    @Override
+    public boolean dispatchTouchEvent(MotionEvent event) {
+        float i=((mBitmap.getWidth() * mBigScale - getWidth()) / 2f);
+        if(mOffsetX==i||mOffsetX==-i||mCurrentScale==mSmallScale){
+            getParent().requestDisallowInterceptTouchEvent(false); //父控件可以进行拦截事件
+        }else {
+            getParent().requestDisallowInterceptTouchEvent(true);
+        }
+        return super.dispatchTouchEvent(event);
     }
 }

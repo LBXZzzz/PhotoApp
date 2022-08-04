@@ -5,6 +5,7 @@ import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.recyclerview.widget.StaggeredGridLayoutManager;
+import androidx.viewpager.widget.ViewPager;
 
 import android.content.ContentResolver;
 import android.content.ContentUris;
@@ -22,6 +23,8 @@ import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 
+import com.example.photoapp.widght.PhotoImageView;
+import com.example.photoapp.widght.PhotoPaperAdapter;
 import com.squareup.picasso.Picasso;
 
 import java.io.InputStream;
@@ -43,8 +46,8 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         /*fileImgBeans=MainActivity.getImgList(this);
-        Log.d("zwy","FileImgBean"+fileImgBeans.get(0).getFilePath());
-        RecyclerView recyclerView =findViewById(R.id.rv_photo);
+        Log.d("zwy","FileImgBean"+fileImgBeans.get(0).getFilePath());*/
+        /*RecyclerView recyclerView =findViewById(R.id.rv_photo);
         StaggeredGridLayoutManager mLayoutManager = new StaggeredGridLayoutManager(
                 3,
                 StaggeredGridLayoutManager.VERTICAL);
@@ -53,6 +56,18 @@ public class MainActivity extends AppCompatActivity {
         Log.d("zwyuu",String.valueOf(filePath2.size()));
         PhotoRecyclerAdapter photoRecyclerAdapter=new PhotoRecyclerAdapter(this,filePath2);
         recyclerView.setAdapter(photoRecyclerAdapter);*/
+
+
+
+        ArrayList<PhotoImageView> photoImageViews=new ArrayList<>();
+        for (int i = 0; i < 4; i++) {
+            PhotoImageView photoImageView=new PhotoImageView(getApplicationContext());
+            photoImageViews.add(photoImageView);
+        }
+        PhotoPaperAdapter photoPaperAdapter=new PhotoPaperAdapter(photoImageViews);
+        ViewPager viewPager=findViewById(R.id.vp);
+        viewPager.setAdapter(photoPaperAdapter);
+
     }
 
     /**
