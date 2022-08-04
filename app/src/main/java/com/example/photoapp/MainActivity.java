@@ -1,6 +1,10 @@
 package com.example.photoapp;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.DefaultItemAnimator;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+import androidx.recyclerview.widget.StaggeredGridLayoutManager;
 
 import android.content.ContentResolver;
 import android.content.ContentUris;
@@ -13,8 +17,10 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.provider.MediaStore;
 import android.util.Log;
+import android.widget.GridLayout;
 import android.widget.GridView;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 
 import com.squareup.picasso.Picasso;
 
@@ -28,28 +34,25 @@ public class MainActivity extends AppCompatActivity {
     static ArrayList<String> filePath=new ArrayList<>();
     static ArrayList<Uri> filePath2=new ArrayList<>();
     ImageView imageView;
-    /**
-     * 用于展示照片墙的GridView
-     */
-    private GridView mPhotoWall;
 
-    /**
-     * GridView的适配器
-     */
-    private PhotoWallAdapter adapter;
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-//        fileImgBeans=MainActivity.getImgList(this);
-//        Log.d("zwy","FileImgBean"+fileImgBeans.get(0).getFilePath());
-       /* ImageView imageView=findViewById(R.id.iv1);
-        imageView.setImageResource(R.drawable.dog_20220803125240);*/
-       /* mPhotoWall = findViewById(R.id.photo_wall);
-        adapter = new PhotoWallAdapter(this, 0, filePath, mPhotoWall);
-        mPhotoWall.setAdapter(adapter);*/
-
+        fileImgBeans=MainActivity.getImgList(this);
+        Log.d("zwy","FileImgBean"+fileImgBeans.get(0).getFilePath());
+        RecyclerView recyclerView =findViewById(R.id.rv_photo);
+        StaggeredGridLayoutManager mLayoutManager = new StaggeredGridLayoutManager(
+                3,
+                StaggeredGridLayoutManager.VERTICAL);
+        recyclerView.setLayoutManager(mLayoutManager);
+        recyclerView.setItemAnimator(new DefaultItemAnimator());
+        Log.d("zwyuu",String.valueOf(filePath2.size()));
+        PhotoRecyclerAdapter photoRecyclerAdapter=new PhotoRecyclerAdapter(this,filePath2);
+        recyclerView.setAdapter(photoRecyclerAdapter);
     }
 
     /**

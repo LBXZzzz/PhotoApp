@@ -10,14 +10,10 @@
     <com.example.photoapp.widght.PhotoImageView
         android:id="@+id/iv1"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
-    <GridView
-        android:id="@+id/photo_wall"
+        android:layout_height="300dp" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rv_photo"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:columnWidth="90dip"
-        android:stretchMode="columnWidth"
-        android:numColumns="auto_fit"
-        android:verticalSpacing="10dip"
-        android:gravity="center" />
+        android:layout_height="wrap_content"/>
 </LinearLayout>

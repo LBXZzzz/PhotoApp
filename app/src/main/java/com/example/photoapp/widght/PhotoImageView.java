@@ -9,7 +9,6 @@ import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 
 import android.graphics.Paint;
-import android.graphics.drawable.Drawable;
 import android.util.AttributeSet;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
@@ -18,6 +17,7 @@ import android.widget.OverScroller;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.widget.AppCompatImageView;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.photoapp.R;
 
@@ -53,11 +53,12 @@ public class PhotoImageView extends AppCompatImageView {
         mBitmap = BitmapFactory.decodeResource(getResources(), R.drawable.dog_20220803125240);
         mPaint = new Paint();
         mOverScroller = new OverScroller(context);
-        mScaleGestureDetector=new ScaleGestureDetector(context,new PhotoScaleGestureListener());
+        mScaleGestureDetector = new ScaleGestureDetector(context, new PhotoScaleGestureListener());
     }
 
     @Override
     public boolean onTouchEvent(MotionEvent event) {
+        performClick();
         // 双指缩放操作优先处理事件
         boolean result = mScaleGestureDetector.onTouchEvent(event);
         // 如果不是双指缩放才处理手势事件
@@ -71,9 +72,14 @@ public class PhotoImageView extends AppCompatImageView {
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
         float scaleFraction = (mCurrentScale - mSmallScale) / (mBigScale - mSmallScale);
-        canvas.translate(mOffsetX*scaleFraction, mOffsetY*scaleFraction);
+        canvas.translate(mOffsetX * scaleFraction, mOffsetY * scaleFraction);
         canvas.scale(mCurrentScale, mCurrentScale, getWidth() / 2f, getHeight() / 2f);
         canvas.drawBitmap(mBitmap, mOriginalOffsetX, mOriginalOffsetY, mPaint);
+    }
+
+    @Override
+    public boolean performClick() {
+        return super.performClick();
     }
 
     //小缩放：放缩后一边占满屏幕，一边留白
@@ -132,7 +138,7 @@ public class PhotoImageView extends AppCompatImageView {
 
         @Override
         public boolean onScroll(MotionEvent e1, MotionEvent e2, float distanceX, float distanceY) {
-            if (isBigScale) {
+            if (mCurrentScale > mSmallScale) {
                 mOffsetX -= distanceX;
                 mOffsetY -= distanceY;
                 measureOffset();
@@ -143,7 +149,7 @@ public class PhotoImageView extends AppCompatImageView {
 
         @Override
         public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY) {
-            if (isBigScale) {
+            if (mCurrentScale > mSmallScale) {
                 mOverScroller.fling((int) mOffsetX, (int) mOffsetY, (int) velocityX, (int) velocityY,
                         -(int) ((mBitmap.getWidth() * mBigScale - getWidth()) / 2f),
                         (int) ((mBitmap.getWidth() * mBigScale - getWidth()) / 2f),
@@ -197,23 +203,26 @@ public class PhotoImageView extends AppCompatImageView {
     }
 
     //双指缩放
-    private class PhotoScaleGestureListener implements ScaleGestureDetector.OnScaleGestureListener{
+    private class PhotoScaleGestureListener implements ScaleGestureDetector.OnScaleGestureListener {
         float initialScale;
+
         //缩放
         @Override
         public boolean onScale(ScaleGestureDetector detector) {
             //通过detector我们可以拿到缩放因子
-            mCurrentScale=initialScale*detector.getScaleFactor();
+            mCurrentScale = initialScale * detector.getScaleFactor();
             invalidate();
             return false;
         }
+
         //缩放前，要记得返回true，消费事件
         @Override
         public boolean onScaleBegin(ScaleGestureDetector detector) {
             //储存一下当前的缩放值
-            initialScale=mCurrentScale;
+            initialScale = mCurrentScale;
             return true;
         }
+
         //缩放后
         @Override
         public void onScaleEnd(ScaleGestureDetector detector) {
