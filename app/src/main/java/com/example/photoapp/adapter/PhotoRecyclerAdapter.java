@@ -1,8 +1,7 @@
-package com.example.photoapp;
+package com.example.photoapp.adapter;
 
 import android.content.Context;
 import android.net.Uri;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,6 +10,7 @@ import android.widget.ImageView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.photoapp.R;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
@@ -32,7 +32,7 @@ public class PhotoRecyclerAdapter extends RecyclerView.Adapter<PhotoRecyclerAdap
 
     @Override
     public void onBindViewHolder(@NonNull PhotoRecyclerAdapter.ViewHolder holder, int position) {
-        Picasso.with(mContext).load(mUriList.get(position)).fit().into(((ViewHolder)holder).imageView);
+        Picasso.with(mContext).load(mUriList.get(position)).centerCrop().fit().into(((ViewHolder)holder).imageView);
 //        ((ViewHolder)holder).imageView.setImageURI(mUriList.get(position));
     }
 

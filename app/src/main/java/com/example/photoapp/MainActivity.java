@@ -2,32 +2,23 @@ package com.example.photoapp;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.DefaultItemAnimator;
-import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.recyclerview.widget.StaggeredGridLayoutManager;
 import androidx.viewpager.widget.ViewPager;
 
-import android.content.ContentResolver;
-import android.content.ContentUris;
 import android.content.Context;
 import android.database.Cursor;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.Handler;
 import android.provider.MediaStore;
 import android.util.Log;
-import android.widget.GridLayout;
-import android.widget.GridView;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 
-import com.example.photoapp.widght.PhotoImageView;
-import com.example.photoapp.widght.PhotoPaperAdapter;
-import com.squareup.picasso.Picasso;
+import com.example.photoapp.adapter.PhotoPaperAdapter;
+import com.example.photoapp.adapter.PhotoRecyclerAdapter;
+import com.example.photoapp.entries.FileImgBean;
+import com.example.widght.PhotoImageView;
 
-import java.io.InputStream;
 import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity {
@@ -45,9 +36,9 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        /*fileImgBeans=MainActivity.getImgList(this);
-        Log.d("zwy","FileImgBean"+fileImgBeans.get(0).getFilePath());*/
-        /*RecyclerView recyclerView =findViewById(R.id.rv_photo);
+     /*   fileImgBeans=MainActivity.getImgList(this);
+        Log.d("zwy","FileImgBean"+fileImgBeans.get(0).getFilePath());
+        RecyclerView recyclerView =findViewById(R.id.rv_photo);
         StaggeredGridLayoutManager mLayoutManager = new StaggeredGridLayoutManager(
                 3,
                 StaggeredGridLayoutManager.VERTICAL);
@@ -67,7 +58,6 @@ public class MainActivity extends AppCompatActivity {
         PhotoPaperAdapter photoPaperAdapter=new PhotoPaperAdapter(photoImageViews);
         ViewPager viewPager=findViewById(R.id.vp);
         viewPager.setAdapter(photoPaperAdapter);
-
     }
 
     /**

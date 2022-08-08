@@ -1,4 +1,4 @@
-package com.example.photoapp.widght;
+package com.example.widght;
 
 
 import android.animation.ObjectAnimator;
@@ -10,7 +10,6 @@ import android.graphics.Canvas;
 
 import android.graphics.Paint;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.ScaleGestureDetector;
@@ -18,9 +17,8 @@ import android.widget.OverScroller;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.widget.AppCompatImageView;
-import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.photoapp.R;
+
 
 
 
@@ -29,6 +27,7 @@ public class PhotoImageView extends AppCompatImageView {
     private GestureDetector mGestureDetector;
     private Bitmap mBitmap;
     private Paint mPaint;
+    private static final String TAG = "PhotoImageView";
 
     public PhotoImageView(Context context) {
         super(context);
@@ -101,6 +100,10 @@ public class PhotoImageView extends AppCompatImageView {
     protected void onSizeChanged(int w, int h, int oldw, int oldh) {
         super.onSizeChanged(w, h, oldw, oldh);
         // 求出初始偏移量，让图片居中
+       inti();
+    }
+
+    private void inti(){
         mOriginalOffsetX = (getWidth() - mBitmap.getWidth()) / 2f;
         mOriginalOffsetY = (getHeight() - mBitmap.getHeight()) / 2f;
         if (mBitmap == null) return;
@@ -148,7 +151,6 @@ public class PhotoImageView extends AppCompatImageView {
                     mOffsetX=x;
                     mOffsetY=y;
                 }
-                Log.d("zwyuu",String.valueOf(mCurrentScale));
                 mOffsetX -= distanceX/mCurrentScale;
                 mOffsetY -= distanceY/mCurrentScale;
                 measureOffset();
@@ -253,7 +255,9 @@ public class PhotoImageView extends AppCompatImageView {
     public boolean dispatchTouchEvent(MotionEvent event) {
         float i=((mBitmap.getWidth() * mBigScale - getWidth()) / 2f);
         if(mOffsetX==i||mOffsetX==-i||mCurrentScale==mSmallScale){
-            getParent().requestDisallowInterceptTouchEvent(false); //父控件可以进行拦截事件
+            getParent().requestDisallowInterceptTouchEvent(false); //父控件可以进行拦截事件`
+            inti();
+            invalidate();
         }else {
             getParent().requestDisallowInterceptTouchEvent(true);
         }

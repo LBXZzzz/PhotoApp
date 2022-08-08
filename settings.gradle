@@ -14,3 +14,5 @@ dependencyResolutionManagement {
 }
 rootProject.name = "PhotoApp"
 include ':app'
+include ':pikachu'
+include ':widght'

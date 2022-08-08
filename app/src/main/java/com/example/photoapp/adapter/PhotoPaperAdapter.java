@@ -1,10 +1,14 @@
-package com.example.photoapp.widght;
+
+
+package com.example.photoapp.adapter;
 
 import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
 import androidx.viewpager.widget.PagerAdapter;
+
+import com.example.widght.PhotoImageView;
 
 import java.util.ArrayList;
 

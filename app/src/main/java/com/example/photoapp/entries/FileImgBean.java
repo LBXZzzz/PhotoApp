@@ -1,4 +1,4 @@
-package com.example.photoapp;
+package com.example.photoapp.entries;
 
 public class FileImgBean {
     private String ThumbPath;
