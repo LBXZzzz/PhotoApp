@@ -14,6 +14,7 @@ public class Stats {
     final Cache cache;
     private static final String STATS_THREAD_NAME = "Stats";
     private static final int CACHE_HIT = 0;
+    private static final int CACHE_MISS = 1;
 
     Stats(Cache cache) {
         this.cache = cache;
@@ -24,6 +25,10 @@ public class Stats {
 
     void dispatchCacheHit() {
         handler.sendEmptyMessage(CACHE_HIT);
+    }
+
+    void dispatchCacheMiss() {
+        handler.sendEmptyMessage(CACHE_MISS);
     }
 
     private static class StatsHandler extends Handler {
@@ -39,6 +44,9 @@ public class Stats {
         public void handleMessage(final Message msg) {
             switch (msg.what) {
                 case CACHE_HIT:
+
+                    break;
+                case CACHE_MISS:
 
                     break;
                 default:

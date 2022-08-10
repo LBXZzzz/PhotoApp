@@ -1,9 +1,12 @@
 package com.example.pikachu;
 
+import android.graphics.Bitmap;
+import android.graphics.drawable.Drawable;
+
 import java.lang.ref.ReferenceQueue;
 import java.lang.ref.WeakReference;
 
-public class Action<T> {
+abstract class Action<T> {
     static class RequestWeakReference<M> extends WeakReference<M> {
         final Action action;
 
@@ -16,14 +19,42 @@ public class Action<T> {
     final Pikachu pikachu;
     final Request request;
     final WeakReference<T> target;
-    final String stringKey;
+    final boolean noFade;
+    final int memoryPolicy;
+    final int networkPolicy;
+    final int errorResId;
+    final Drawable errorDrawable;
+    final String key;
+    final Object tag;
 
-    Action(Pikachu pikachu, Request request, T target, String stringKey) {
+    boolean willReplay;
+    boolean cancelled;
+
+    Action(Pikachu pikachu, T target, Request request, int memoryPolicy, int networkPolicy,
+           int errorResId, Drawable errorDrawable, String key, Object tag, boolean noFade) {
         this.pikachu = pikachu;
         this.request = request;
         this.target =
                 target == null ? null : new RequestWeakReference<T>(this, target, pikachu.referenceQueue);
-        this.stringKey = stringKey;
+        this.memoryPolicy = memoryPolicy;
+        this.networkPolicy = networkPolicy;
+        this.noFade = noFade;
+        this.errorResId = errorResId;
+        this.errorDrawable = errorDrawable;
+        this.key = key;
+        this.tag = (tag != null ? tag : this);
+    }
+
+    abstract void complete(Bitmap result, Pikachu.LoadedFrom from);
+
+    abstract void error();
+
+    void cancel() {
+        cancelled = true;
+    }
+
+    Request getRequest() {
+        return request;
     }
 
     T getTarget() {
@@ -31,14 +62,34 @@ public class Action<T> {
     }
 
     String getKey() {
-        return stringKey;
+        return key;
     }
 
-    Request getRequest() {
-        return request;
+    boolean isCancelled() {
+        return cancelled;
+    }
+
+    boolean willReplay() {
+        return willReplay;
+    }
+
+    int getMemoryPolicy() {
+        return memoryPolicy;
+    }
+
+    int getNetworkPolicy() {
+        return networkPolicy;
     }
 
     Pikachu getPicasso() {
         return pikachu;
+    }
+
+    Pikachu.Priority getPriority() {
+        return request.priority;
+    }
+
+    Object getTag() {
+        return tag;
     }
 }

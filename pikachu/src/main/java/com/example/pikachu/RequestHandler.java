@@ -7,7 +7,7 @@ import java.io.IOException;
 import java.io.InputStream;
 
 public abstract class RequestHandler {
-
+    //是否能够处理给定的 Request
     public abstract boolean canHandleRequest(Request data);
 
     public static final class Result {
@@ -33,8 +33,24 @@ public abstract class RequestHandler {
             this.loadedFrom = Utils.checkNotNull(loadedFrom, "loadedFrom == null");
             this.exifOrientation = exifOrientation;
         }
-    }
 
+        public InputStream getStream() {
+            return stream;
+        }
+
+        public Pikachu.LoadedFrom getLoadedFrom() {
+            return loadedFrom;
+        }
+
+        int getExifOrientation() {
+            return exifOrientation;
+        }
+
+        public Bitmap getBitmap() {
+            return bitmap;
+        }
+    }
+    //如果 canHandleRequest() 返回值为 true ,那么之后就会执行 load () 方法
     public abstract Result load(Request request, int networkPolicy) throws IOException;
 
     static void calculateInSampleSize(int reqWidth, int reqHeight, int width, int height,
@@ -59,6 +75,10 @@ public abstract class RequestHandler {
         options.inJustDecodeBounds = false;
     }
 
+    static boolean requiresInSampleSize(BitmapFactory.Options options) {
+        return options != null && options.inJustDecodeBounds;
+    }
+
     static BitmapFactory.Options createBitmapOptions(Request data) {
         final boolean justBounds = data.hasSize();
         final boolean hasConfig = data.config != null;
@@ -73,6 +93,11 @@ public abstract class RequestHandler {
         return options;
     }
 
+    static void calculateInSampleSize(int reqWidth, int reqHeight, BitmapFactory.Options options,
+                                      Request request) {
+        calculateInSampleSize(reqWidth, reqHeight, options.outWidth, options.outHeight, options,
+                request);
+    }
     int getRetryCount() {
         return 0;
     }

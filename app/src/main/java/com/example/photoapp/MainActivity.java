@@ -29,13 +29,14 @@ public class MainActivity extends AppCompatActivity {
     static ArrayList<FileImgBean> fileImgBeans;
     static ArrayList<String> filePath = new ArrayList<>();
     static ArrayList<Uri> filePath2 = new ArrayList<>();
-    ImageView imageView;
+
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        ImageView imageView=findViewById(R.id.im);
         fileImgBeans=MainActivity.getImgList(this);
         RecyclerView recyclerView =findViewById(R.id.rv_photo);
         StaggeredGridLayoutManager mLayoutManager = new StaggeredGridLayoutManager(
@@ -46,8 +47,8 @@ public class MainActivity extends AppCompatActivity {
         PhotoRecyclerAdapter photoRecyclerAdapter=new PhotoRecyclerAdapter(this,filePath2);
         recyclerView.setAdapter(photoRecyclerAdapter);
 
-       /* Picasso.with().load().into();
-        Pikachu.with().load().into(imageView);*/
+
+        Pikachu.with(this).load(filePath2.get(0)).into(imageView);
         ArrayList<PhotoImageView> photoImageViews = new ArrayList<>();
         for (int i = 0; i < 4; i++) {
             PhotoImageView photoImageView = new PhotoImageView(getApplicationContext());

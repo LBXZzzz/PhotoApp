@@ -2,6 +2,7 @@ package com.example.pikachu;
 
 import android.graphics.Bitmap;
 import android.net.Uri;
+import android.util.Log;
 
 public class Request {
     /**
@@ -15,13 +16,16 @@ public class Request {
     public final int targetHeight;
     public final Bitmap.Config config;
     public final boolean centerInside;
+    //优先级
+    public final Pikachu.Priority priority;
 
-    private Request(Uri uri, int targetWidth, int targetHeight, Bitmap.Config config, boolean centerInside) {
+    private Request(Uri uri, int targetWidth, int targetHeight, Bitmap.Config config, boolean centerInside,Pikachu.Priority priority) {
         this.uri = uri;
         this.targetHeight = targetHeight;
         this.targetWidth = targetWidth;
         this.config = config;
         this.centerInside = centerInside;
+        this.priority=priority;
     }
 
     public boolean hasSize() {
@@ -34,10 +38,28 @@ public class Request {
         private int targetHeight;
         private Bitmap.Config config;
         private boolean centerInside;
+        private Pikachu.Priority priority;
 
-        Builder(Uri uri) {
+        Builder(Uri uri,Bitmap.Config bitmapConfig) {
             this.uri = uri;
+            this.config=bitmapConfig;
         }
+
+        public Builder resize(int targetWidth, int targetHeight) {
+            if (targetWidth < 0) {
+                throw new IllegalArgumentException("Width must be positive number or 0.");
+            }
+            if (targetHeight < 0) {
+                throw new IllegalArgumentException("Height must be positive number or 0.");
+            }
+            if (targetHeight == 0 && targetWidth == 0) {
+                throw new IllegalArgumentException("At least one dimension has to be positive number.");
+            }
+            this.targetWidth = targetWidth;
+            this.targetHeight = targetHeight;
+            return this;
+        }
+
 
         public Builder setUri(Uri uri) {
             if (uri == null) {
@@ -48,13 +70,19 @@ public class Request {
         }
 
         public Request build() {
-            return new Request(uri, targetWidth, targetHeight, config, centerInside);
+            if (priority == null) {
+                priority = Pikachu.Priority.NORMAL;
+            }
+            return new Request(uri, targetWidth, targetHeight, config, centerInside,priority);
         }
     }
 
 
     boolean hasImage() {
         return uri != null;
+    }
+    String getName() {
+        return String.valueOf(uri.getPath());
     }
 }
 
