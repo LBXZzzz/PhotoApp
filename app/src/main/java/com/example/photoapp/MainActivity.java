@@ -36,7 +36,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-      /*  fileImgBeans=MainActivity.getImgList(this);
+        fileImgBeans=MainActivity.getImgList(this);
         RecyclerView recyclerView =findViewById(R.id.rv_photo);
         StaggeredGridLayoutManager mLayoutManager = new StaggeredGridLayoutManager(
                 3,
@@ -44,7 +44,7 @@ public class MainActivity extends AppCompatActivity {
         recyclerView.setLayoutManager(mLayoutManager);
         recyclerView.setItemAnimator(new DefaultItemAnimator());
         PhotoRecyclerAdapter photoRecyclerAdapter=new PhotoRecyclerAdapter(this,filePath2);
-        recyclerView.setAdapter(photoRecyclerAdapter);*/
+        recyclerView.setAdapter(photoRecyclerAdapter);
 
        /* Picasso.with().load().into();
         Pikachu.with().load().into(imageView);*/

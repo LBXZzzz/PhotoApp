@@ -13,6 +13,7 @@ import android.util.AttributeSet;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.ScaleGestureDetector;
+import android.widget.ImageView;
 import android.widget.OverScroller;
 
 import androidx.annotation.Nullable;
@@ -22,7 +23,7 @@ import androidx.appcompat.widget.AppCompatImageView;
 
 
 
-public class PhotoImageView extends AppCompatImageView {
+public class PhotoImageView extends ImageView {
 
     private GestureDetector mGestureDetector;
     private Bitmap mBitmap;
