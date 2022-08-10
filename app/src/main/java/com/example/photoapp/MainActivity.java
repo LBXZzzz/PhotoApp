@@ -17,46 +17,44 @@ import android.widget.ImageView;
 import com.example.photoapp.adapter.PhotoPaperAdapter;
 import com.example.photoapp.adapter.PhotoRecyclerAdapter;
 import com.example.photoapp.entries.FileImgBean;
+import com.example.pikachu.Pikachu;
 import com.example.widght.PhotoImageView;
+import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity {
 
-    private static final String TAG="MainActivity";
+    private static final String TAG = "MainActivity";
     static ArrayList<FileImgBean> fileImgBeans;
-    static ArrayList<String> filePath=new ArrayList<>();
-    static ArrayList<Uri> filePath2=new ArrayList<>();
+    static ArrayList<String> filePath = new ArrayList<>();
+    static ArrayList<Uri> filePath2 = new ArrayList<>();
     ImageView imageView;
-
-
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-     /*   fileImgBeans=MainActivity.getImgList(this);
-        Log.d("zwy","FileImgBean"+fileImgBeans.get(0).getFilePath());
+      /*  fileImgBeans=MainActivity.getImgList(this);
         RecyclerView recyclerView =findViewById(R.id.rv_photo);
         StaggeredGridLayoutManager mLayoutManager = new StaggeredGridLayoutManager(
                 3,
                 StaggeredGridLayoutManager.VERTICAL);
         recyclerView.setLayoutManager(mLayoutManager);
         recyclerView.setItemAnimator(new DefaultItemAnimator());
-        Log.d("zwyuu",String.valueOf(filePath2.size()));
         PhotoRecyclerAdapter photoRecyclerAdapter=new PhotoRecyclerAdapter(this,filePath2);
         recyclerView.setAdapter(photoRecyclerAdapter);*/
 
-
-
-        ArrayList<PhotoImageView> photoImageViews=new ArrayList<>();
+       /* Picasso.with().load().into();
+        Pikachu.with().load().into(imageView);*/
+        ArrayList<PhotoImageView> photoImageViews = new ArrayList<>();
         for (int i = 0; i < 4; i++) {
-            PhotoImageView photoImageView=new PhotoImageView(getApplicationContext());
+            PhotoImageView photoImageView = new PhotoImageView(getApplicationContext());
             photoImageViews.add(photoImageView);
         }
-        PhotoPaperAdapter photoPaperAdapter=new PhotoPaperAdapter(photoImageViews);
-        ViewPager viewPager=findViewById(R.id.vp);
+        PhotoPaperAdapter photoPaperAdapter = new PhotoPaperAdapter(photoImageViews);
+        ViewPager viewPager = findViewById(R.id.vp);
         viewPager.setAdapter(photoPaperAdapter);
     }
 
@@ -89,8 +87,8 @@ public class MainActivity extends AppCompatActivity {
             do {
                 FileImgBean info = new FileImgBean();
                 int id = cursor.getInt(cursor.getColumnIndexOrThrow(MediaStore.Images.Media._ID));
-                Log.d(TAG,String.valueOf(id));
-                Uri uri= Uri.withAppendedPath(mUri, "" + id );
+                Log.d(TAG, String.valueOf(id));
+                Uri uri = Uri.withAppendedPath(mUri, "" + id);
                 filePath2.add(uri);
                 Cursor thumbCursor = context.getContentResolver().query(
                         MediaStore.Images.Thumbnails.EXTERNAL_CONTENT_URI,

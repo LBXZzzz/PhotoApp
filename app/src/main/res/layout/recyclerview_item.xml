@@ -4,8 +4,8 @@
     android:layout_height="wrap_content">
 
     <ImageView
-        android:layout_margin="8dp"
         android:id="@+id/iv_rv_item"
         android:layout_width="150dp"
-        android:layout_height="150dp"/>
+        android:layout_height="150dp"
+        android:layout_margin="8dp" />
 </LinearLayout>

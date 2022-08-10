@@ -18,9 +18,10 @@ import java.util.ArrayList;
 public class PhotoRecyclerAdapter extends RecyclerView.Adapter<PhotoRecyclerAdapter.ViewHolder> {
     private Context mContext;
     private ArrayList<Uri> mUriList;
-    public PhotoRecyclerAdapter(Context context, ArrayList<Uri> uriList){
-        this.mContext=context;
-        this.mUriList=uriList;
+
+    public PhotoRecyclerAdapter(Context context, ArrayList<Uri> uriList) {
+        this.mContext = context;
+        this.mUriList = uriList;
     }
 
     @NonNull
@@ -32,7 +33,7 @@ public class PhotoRecyclerAdapter extends RecyclerView.Adapter<PhotoRecyclerAdap
 
     @Override
     public void onBindViewHolder(@NonNull PhotoRecyclerAdapter.ViewHolder holder, int position) {
-        Picasso.with(mContext).load(mUriList.get(position)).centerCrop().fit().into(((ViewHolder)holder).imageView);
+        Picasso.with(mContext).load(mUriList.get(position)).centerCrop().fit().into(((ViewHolder) holder).imageView);
 //        ((ViewHolder)holder).imageView.setImageURI(mUriList.get(position));
     }
 
@@ -41,11 +42,12 @@ public class PhotoRecyclerAdapter extends RecyclerView.Adapter<PhotoRecyclerAdap
         return mUriList.size();
     }
 
-    public class ViewHolder extends RecyclerView.ViewHolder{
+    public class ViewHolder extends RecyclerView.ViewHolder {
         ImageView imageView;
+
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
-            imageView=itemView.findViewById(R.id.iv_rv_item);
+            imageView = itemView.findViewById(R.id.iv_rv_item);
         }
     }
 }
