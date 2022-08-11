@@ -6,14 +6,20 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     tools:context=".MainActivity">
-    <androidx.viewpager.widget.ViewPager
-        android:id="@+id/vp"
-        android:layout_width="match_parent"
-        android:layout_height="300dp" />
-
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rv_photo"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+        android:layout_weight="1"
+        android:layout_height="0dp"/>
+    <Toolbar
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <Button
+            android:id="@+id/bt_photo"
+            android:text="预览"
+            android:textSize="15sp"
+            android:layout_width="80dp"
+            android:layout_height="45dp"/>
+    </Toolbar>
 </LinearLayout>

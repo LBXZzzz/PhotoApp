@@ -9,7 +9,10 @@ import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 
 import android.graphics.Paint;
+import android.net.Uri;
+import android.provider.MediaStore;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.ScaleGestureDetector;
@@ -28,10 +31,12 @@ public class PhotoImageView extends ImageView {
     private GestureDetector mGestureDetector;
     private Bitmap mBitmap;
     private Paint mPaint;
+    private Uri uri;
     private static final String TAG = "PhotoImageView";
 
-    public PhotoImageView(Context context) {
+    public PhotoImageView(Context context, Uri uri) {
         super(context);
+        this.uri=uri;
         init(context);
     }
 
@@ -47,7 +52,7 @@ public class PhotoImageView extends ImageView {
 
     private void init(Context context) {
         this.mGestureDetector = new GestureDetector(context, new PhotoGestureListener());
-        mBitmap = BitmapFactory.decodeResource(getResources(), R.drawable.dog_20220803125240);
+        mBitmap=getBitmapFromUri(context,uri);
         mPaint = new Paint();
         mOverScroller = new OverScroller(context);
         mScaleGestureDetector = new ScaleGestureDetector(context, new PhotoScaleGestureListener());
@@ -263,5 +268,26 @@ public class PhotoImageView extends ImageView {
             getParent().requestDisallowInterceptTouchEvent(true);
         }
         return super.dispatchTouchEvent(event);
+    }
+
+    /**
+     * 通过uri获取Bitmap对象
+     *
+     * @param context
+     * @param uri
+     * @return
+     */
+    private static Bitmap getBitmapFromUri(Context context, Uri uri) {
+        Bitmap bitmap = null;
+        try {
+            // 读取uri所在的图片
+            bitmap = MediaStore.Images.Media.getBitmap(
+                    context.getContentResolver(), uri);
+            return bitmap;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return bitmap;
+
     }
 }

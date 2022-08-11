@@ -8,11 +8,14 @@ import androidx.recyclerview.widget.StaggeredGridLayoutManager;
 import androidx.viewpager.widget.ViewPager;
 
 import android.content.Context;
+import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.util.Log;
+import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
 
 import com.example.photoapp.adapter.PhotoPaperAdapter;
@@ -37,8 +40,8 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
         fileImgBeans=MainActivity.getImgList(this);
+        Button button=findViewById(R.id.bt_photo);
         RecyclerView recyclerView =findViewById(R.id.rv_photo);
         StaggeredGridLayoutManager mLayoutManager = new StaggeredGridLayoutManager(
                 3,
@@ -68,14 +71,29 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        ArrayList<PhotoImageView> photoImageViews = new ArrayList<>();
+        button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ArrayList<String> selectUriStringList=new ArrayList<>();
+                ArrayList<Uri> selectUriList=photoRecyclerAdapter.getUri();
+                for (int i = 0; i < selectUriList.size(); i++) {
+                    selectUriStringList.add(selectUriList.get(i).toString());
+                }
+                Log.d("zwy",String.valueOf(selectUriList.size()));
+                Intent intent=new Intent(MainActivity.this,photoActivity.class);
+                intent.putStringArrayListExtra("selectUriStringList",selectUriStringList);
+                startActivity(intent);
+            }
+        });
+
+        /*ArrayList<PhotoImageView> photoImageViews = new ArrayList<>();
         for (int i = 0; i < 4; i++) {
             PhotoImageView photoImageView = new PhotoImageView(getApplicationContext());
             photoImageViews.add(photoImageView);
         }
         PhotoPaperAdapter photoPaperAdapter = new PhotoPaperAdapter(photoImageViews);
         ViewPager viewPager = findViewById(R.id.vp);
-        viewPager.setAdapter(photoPaperAdapter);
+        viewPager.setAdapter(photoPaperAdapter);*/
     }
 
     /**

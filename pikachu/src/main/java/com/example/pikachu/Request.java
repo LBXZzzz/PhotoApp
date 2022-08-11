@@ -32,9 +32,6 @@ public class Request {
         this.priority=priority;
         this.centerCrop=centerCorp;
         this.onlyScaleDown = onlyScaleDown;
-        if(centerCrop){
-            Log.d("zwyrr","mms");
-        }
     }
 
     public boolean hasSize() {
