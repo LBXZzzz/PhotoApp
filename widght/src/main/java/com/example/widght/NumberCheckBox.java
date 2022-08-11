@@ -39,7 +39,7 @@ public class NumberCheckBox extends View {
     private String numberText="";
 
     private OnOnStateChangeListener listener;
-    private static final String MARKED_WORD="您最多只能选择4个图片";
+    private static final String MARKED_WORD="您最多只能选择7个图片";
 
     //监听点击事件
     public void setOnStateChangeListener(OnOnStateChangeListener listener) {
@@ -93,7 +93,7 @@ public class NumberCheckBox extends View {
     private void toggle() {
         isSelect = !isSelect;
         if(isSelect){
-            if(numberCheckBoxes.size()<4){
+            if(numberCheckBoxes.size()<7){
                 numberCheckBoxes.add(this);
                 numberText=String.valueOf(numberCheckBoxes.size());
             }else {

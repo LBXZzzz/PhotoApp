@@ -18,8 +18,8 @@ import android.widget.OverScroller;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.widget.AppCompatImageView;
-
-
+import android.annotation.SuppressLint;
+@SuppressLint("AppCompatCustomView")
 
 
 

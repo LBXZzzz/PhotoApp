@@ -11,6 +11,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.photoapp.R;
+import com.example.pikachu.Pikachu;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
@@ -33,8 +34,9 @@ public class PhotoRecyclerAdapter extends RecyclerView.Adapter<PhotoRecyclerAdap
 
     @Override
     public void onBindViewHolder(@NonNull PhotoRecyclerAdapter.ViewHolder holder, int position) {
-        Picasso.with(mContext).load(mUriList.get(position)).centerCrop().fit().into(((ViewHolder) holder).imageView);
-//        ((ViewHolder)holder).imageView.setImageURI(mUriList.get(position));
+        Pikachu.with(mContext).load(mUriList.get(position)).placeholder(com.example.widght.R.drawable.photo_20220811101907).into(( holder).imageView);
+       // Picasso.with(mContext).load(mUriList.get(position)).centerCrop().fit().into(((ViewHolder) holder).imageView);
+
     }
 
     @Override

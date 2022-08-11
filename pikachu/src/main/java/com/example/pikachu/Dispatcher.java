@@ -107,7 +107,7 @@ public class Dispatcher {
         BitmapHunter hunter = hunterMap.get(action.getKey());
         // 根据 Action 对象创建 BitmapHunter 对象, BitmapHunter 实现了 Runnable 接口。
         hunter = BitmapHunter.forRequest(action.getPicasso(), this, cache, stats, action);
-        // 将任务提交到线程池。这里有个赋值操作,拿到 Future 对象。目的是为了提供取消任务的功能。
+        // 将任务提交到线程池。这里有个赋值操作,拿到 Future 对象。目的是为了提供取消任务的功能
         hunter.future = service.submit(hunter);
         hunterMap.put(action.getKey(), hunter);
     }

@@ -7,6 +7,8 @@ import android.net.Uri;
 import android.os.Looper;
 import android.widget.ImageView;
 
+import androidx.core.content.res.ResourcesCompat;
+
 public class RequestCreator {
     private final Pikachu pikachu;
     private boolean deferred;
@@ -60,9 +62,21 @@ public class RequestCreator {
             }
         }
 
+        if (setPlaceholder) {
+            PikachuDrawable.setPlaceholder(target, getPlaceholderDrawable());
+        }
+
         Action action = new ImageViewAction(pikachu, target, request, memoryPolicy, networkPolicy, errorResId,
                 errorDrawable, requestKey, tag, callback, noFade);
         pikachu.enqueueAndSubmit(action);
+    }
+
+    private Drawable getPlaceholderDrawable() {
+        if (placeholderResId != 0) {
+            return ResourcesCompat.getDrawable(pikachu.context.getResources(),placeholderResId,null);
+        } else {
+            return placeholderDrawable; // This may be null which is expected and desired behavior.
+        }
     }
 
     public RequestCreator tag(Object tag) {
@@ -129,6 +143,20 @@ public class RequestCreator {
             throw new IllegalStateException("Placeholder image already set.");
         }
         this.placeholderDrawable = placeholderDrawable;
+        return this;
+    }
+
+    public RequestCreator placeholder(int placeholderResId) {
+        if (!setPlaceholder) {
+            throw new IllegalStateException("Already explicitly declared as no placeholder.");
+        }
+        if (placeholderResId == 0) {
+            throw new IllegalArgumentException("Placeholder image resource invalid.");
+        }
+        if (placeholderDrawable != null) {
+            throw new IllegalStateException("Placeholder image already set.");
+        }
+        this.placeholderResId = placeholderResId;
         return this;
     }
 

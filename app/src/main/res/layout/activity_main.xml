@@ -9,11 +9,15 @@
 <ImageView
     android:id="@+id/im"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"/>
+    android:layout_height="100dp"/>
+    <ImageView
+        android:id="@+id/im1"
+        android:layout_width="match_parent"
+        android:layout_height="100dp"/>
     <androidx.viewpager.widget.ViewPager
         android:id="@+id/vp"
         android:layout_width="match_parent"
-        android:layout_height="300dp" />
+        android:layout_height="50dp" />
 
 
     <androidx.recyclerview.widget.RecyclerView
