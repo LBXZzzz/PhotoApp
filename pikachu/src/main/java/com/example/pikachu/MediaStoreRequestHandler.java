@@ -12,6 +12,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.provider.MediaStore;
+import android.util.Log;
 
 import java.io.IOException;
 
@@ -47,7 +48,6 @@ public class MediaStoreRequestHandler extends ContentStreamRequestHandler {
 
             BitmapFactory.Options options = createBitmapOptions(request);
             options.inJustDecodeBounds = true;
-
             calculateInSampleSize(request.targetWidth, request.targetHeight, picassoKind.width,
                     picassoKind.height, options, request);
 

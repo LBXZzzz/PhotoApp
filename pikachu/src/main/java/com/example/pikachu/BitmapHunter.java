@@ -2,6 +2,7 @@ package com.example.pikachu;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Matrix;
 import android.util.Log;
 
 import java.io.IOException;
@@ -13,8 +14,9 @@ import java.util.concurrent.atomic.AtomicInteger;
 import javax.xml.transform.Result;
 
 public class BitmapHunter implements Runnable {
-    private final static String TAG="BitmapHunter";
+    private final static String TAG = "BitmapHunter";
     private static final AtomicInteger SEQUENCE_GENERATOR = new AtomicInteger();
+    private static final Object DECODE_LOCK = new Object();
     Bitmap result;
     final int sequence;
     final Pikachu pikachu;
@@ -35,7 +37,8 @@ public class BitmapHunter implements Runnable {
     Future<?> future;
 
     private static final ThreadLocal<StringBuilder> NAME_BUILDER = new ThreadLocal<StringBuilder>() {
-        @Override protected StringBuilder initialValue() {
+        @Override
+        protected StringBuilder initialValue() {
             return new StringBuilder(Utils.THREAD_PREFIX);
         }
     };
@@ -94,11 +97,11 @@ public class BitmapHunter implements Runnable {
             e.printStackTrace();
         }
         if (result == null) {
-            Log.d(TAG,"bitmap获取失败");
+            Log.d(TAG, "bitmap获取失败");
             dispatcher.dispatchFailed(this);
         } else {
             // bitmap 获取成功
-            Log.d(TAG,"bitmap获取成功");
+            Log.d(TAG, "bitmap获取成功");
             dispatcher.dispatchComplete(this);
         }
     }
@@ -137,6 +140,16 @@ public class BitmapHunter implements Runnable {
                 }
             }
 
+        }
+
+        if (bitmap != null) {
+            if (data.needsTransformation() || exifRotation != 0) {
+                synchronized (DECODE_LOCK) {
+                    if (data.needsMatrixTransform() || exifRotation != 0) {
+                        bitmap = transformResult(data, bitmap, exifRotation);
+                    }
+                }
+            }
         }
         return bitmap;
     }
@@ -179,6 +192,83 @@ public class BitmapHunter implements Runnable {
         }
     }
 
+    static Bitmap transformResult(Request data, Bitmap result, int exifRotation) {
+        int inWidth = result.getWidth();
+        int inHeight = result.getHeight();
+        boolean onlyScaleDown = data.onlyScaleDown;
+        int drawX = 0;
+        int drawY = 0;
+        int drawWidth = inWidth;
+        int drawHeight = inHeight;
+
+        Matrix matrix = new Matrix();
+
+        if (data.needsMatrixTransform()) {
+            int targetWidth = data.targetWidth;
+            int targetHeight = data.targetHeight;
+
+            if (data.centerCrop) {
+                float widthRatio = targetWidth / (float) inWidth;
+                float heightRatio = targetHeight / (float) inHeight;
+                float scaleX, scaleY;
+                if (widthRatio > heightRatio) {
+                    int newSize = (int) Math.ceil(inHeight * (heightRatio / widthRatio));
+                    drawY = (inHeight - newSize) / 2;
+                    drawHeight = newSize;
+                    scaleX = widthRatio;
+                    scaleY = targetHeight / (float) drawHeight;
+                } else {
+                    int newSize = (int) Math.ceil(inWidth * (widthRatio / heightRatio));
+                    drawX = (inWidth - newSize) / 2;
+                    drawWidth = newSize;
+                    scaleX = targetWidth / (float) drawWidth;
+                    scaleY = heightRatio;
+                }
+                if (shouldResize(onlyScaleDown, inWidth, inHeight, targetWidth, targetHeight)) {
+                    matrix.preScale(scaleX, scaleY);
+                }
+            } else if (data.centerInside) {
+                float widthRatio = targetWidth / (float) inWidth;
+                float heightRatio = targetHeight / (float) inHeight;
+                float scale = widthRatio < heightRatio ? widthRatio : heightRatio;
+                if (shouldResize(onlyScaleDown, inWidth, inHeight, targetWidth, targetHeight)) {
+                    matrix.preScale(scale, scale);
+                }
+            } else if ((targetWidth != 0 || targetHeight != 0) //
+                    && (targetWidth != inWidth || targetHeight != inHeight)) {
+                // If an explicit target size has been specified and they do not match the results bounds,
+                // pre-scale the existing matrix appropriately.
+                // Keep aspect ratio if one dimension is set to 0.
+                float sx =
+                        targetWidth != 0 ? targetWidth / (float) inWidth : targetHeight / (float) inHeight;
+                float sy =
+                        targetHeight != 0 ? targetHeight / (float) inHeight : targetWidth / (float) inWidth;
+                if (shouldResize(onlyScaleDown, inWidth, inHeight, targetWidth, targetHeight)) {
+                    matrix.preScale(sx, sy);
+                }
+            }
+        }
+
+
+        if (exifRotation != 0) {
+            matrix.preRotate(exifRotation);
+        }
+
+        Bitmap newResult =
+                Bitmap.createBitmap(result, drawX, drawY, drawWidth, drawHeight, matrix, true);
+        if (newResult != result) {
+            result.recycle();
+            result = newResult;
+        }
+
+        return result;
+    }
+
+    private static boolean shouldResize(boolean onlyScaleDown, int inWidth, int inHeight,
+                                        int targetWidth, int targetHeight) {
+        return !onlyScaleDown || inWidth > targetWidth || inHeight > targetHeight;
+    }
+
     static void updateThreadName(Request data) {
         String name = data.getName();
 
@@ -196,6 +286,7 @@ public class BitmapHunter implements Runnable {
     boolean isCancelled() {
         return future != null && future.isCancelled();
     }
+
     Request getData() {
         return data;
     }

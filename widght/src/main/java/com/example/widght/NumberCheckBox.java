@@ -61,7 +61,7 @@ public class NumberCheckBox extends View {
         mSelectColor = typedArray.getColor(R.styleable.NumberCheckBox_circle_color_normal, getResources().getColor(R.color.selectGreen));
         mNoSelectColor = typedArray.getColor(R.styleable.NumberCheckBox_circle_color_press, Color.TRANSPARENT);
         mStrokeColor = typedArray.getColor(R.styleable.NumberCheckBox_strokeColor, Color.BLACK);
-        mStrokeWidth = typedArray.getFloat(R.styleable.NumberCheckBox_strokeWidth, 2);
+        mStrokeWidth = typedArray.getFloat(R.styleable.NumberCheckBox_strokeWidth, 4);
         typedArray.recycle();
         init();
     }

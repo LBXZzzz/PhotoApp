@@ -51,6 +51,9 @@ public class Utils {
         builder.ensureCapacity(path.length() + KEY_PADDING);
         builder.append(path);
         builder.append(KEY_SEPARATOR);
+        builder.append("resize:").append(data.targetWidth).append('x').append(data.targetHeight);
+        builder.append(KEY_SEPARATOR);
+        builder.append("centerCrop").append(KEY_SEPARATOR);
         return builder.toString();
     }
 

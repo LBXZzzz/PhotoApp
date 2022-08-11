@@ -1,5 +1,6 @@
 package com.example.photoapp;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.RecyclerView;
@@ -36,8 +37,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        ImageView imageView=findViewById(R.id.im);
-        ImageView imageView1=findViewById(R.id.im1);
+
         fileImgBeans=MainActivity.getImgList(this);
         RecyclerView recyclerView =findViewById(R.id.rv_photo);
         StaggeredGridLayoutManager mLayoutManager = new StaggeredGridLayoutManager(
@@ -47,10 +47,27 @@ public class MainActivity extends AppCompatActivity {
         recyclerView.setItemAnimator(new DefaultItemAnimator());
         PhotoRecyclerAdapter photoRecyclerAdapter=new PhotoRecyclerAdapter(this,filePath2);
         recyclerView.setAdapter(photoRecyclerAdapter);
+        recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrollStateChanged(@NonNull RecyclerView recyclerView, int newState) {
+                // 查看源码可知State有三种状态：SCROLL_STATE_IDLE（静止）、SCROLL_STATE_DRAGGING（上升）、SCROLL_STATE_SETTLING（下落）
+                if (newState == RecyclerView.SCROLL_STATE_IDLE) { // 滚动静止时才加载图片资源，极大提升流畅度
+                   photoRecyclerAdapter.setScrolling(false);
+                    photoRecyclerAdapter.notifyDataSetChanged(); // notify调用后onBindViewHolder会响应调用
+                } else{
+                    photoRecyclerAdapter.setScrolling(true);
+                }
 
+                super.onScrollStateChanged(recyclerView, newState);
+            }
+        });
+        recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
+                super.onScrolled(recyclerView, dx, dy);
+            }
+        });
 
-        Pikachu.with(this).load(filePath2.get(0)).into(imageView);
-        Pikachu.with(this).load(filePath2.get(2)).into(imageView1);
         ArrayList<PhotoImageView> photoImageViews = new ArrayList<>();
         for (int i = 0; i < 4; i++) {
             PhotoImageView photoImageView = new PhotoImageView(getApplicationContext());
@@ -93,27 +110,6 @@ public class MainActivity extends AppCompatActivity {
                 Log.d(TAG, String.valueOf(id));
                 Uri uri = Uri.withAppendedPath(mUri, "" + id);
                 filePath2.add(uri);
-                Cursor thumbCursor = context.getContentResolver().query(
-                        MediaStore.Images.Thumbnails.EXTERNAL_CONTENT_URI,
-                        thumbColumns, MediaStore.Images.Thumbnails.IMAGE_ID
-                                + "=" + id, null, null);
-                if (thumbCursor.moveToFirst()) {
-                    info.setThumbPath(thumbCursor.getString(thumbCursor.getColumnIndexOrThrow(MediaStore.Images.Thumbnails.DATA)));
-                }
-                info.setFilePath(cursor.getString(cursor.getColumnIndexOrThrow(MediaStore.Images.Media
-                        .DATA)));
-                MainActivity.filePath.add(cursor.getString(cursor.getColumnIndexOrThrow(MediaStore.Images.Media
-                        .DATA)));
-                info.setMimeType(cursor.getString(cursor.getColumnIndexOrThrow(MediaStore.Images.Media.MIME_TYPE)));
-                info.setTitle(cursor.getString(cursor
-                        .getColumnIndexOrThrow(MediaStore.Images.Media.TITLE)));
-                info.setTakeTime(cursor.getString(cursor.getColumnIndexOrThrow(MediaStore.Images
-                        .Media.DATE_TAKEN)));
-                int columnIndexOrThrow = cursor.getColumnIndex(MediaStore.Images
-                        .Media.SIZE);
-                int anInt = cursor.getInt(columnIndexOrThrow);
-                info.setImgSize(anInt + "");
-                ImagesList.add(info);
             } while (cursor.moveToNext());
         }
         return ImagesList;

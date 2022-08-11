@@ -19,6 +19,7 @@ import java.util.ArrayList;
 public class PhotoRecyclerAdapter extends RecyclerView.Adapter<PhotoRecyclerAdapter.ViewHolder> {
     private Context mContext;
     private ArrayList<Uri> mUriList;
+    protected boolean isScrolling = false;
 
     public PhotoRecyclerAdapter(Context context, ArrayList<Uri> uriList) {
         this.mContext = context;
@@ -34,8 +35,17 @@ public class PhotoRecyclerAdapter extends RecyclerView.Adapter<PhotoRecyclerAdap
 
     @Override
     public void onBindViewHolder(@NonNull PhotoRecyclerAdapter.ViewHolder holder, int position) {
-        Pikachu.with(mContext).load(mUriList.get(position)).placeholder(com.example.widght.R.drawable.photo_20220811101907).into(( holder).imageView);
-       // Picasso.with(mContext).load(mUriList.get(position)).centerCrop().fit().into(((ViewHolder) holder).imageView);
+        (holder).imageView.setImageResource(com.example.widght.R.drawable.photo_20220811101907);
+        if(!isScrolling){
+            Pikachu.with(mContext).load(mUriList.get(position))
+                    .placeholder(com.example.widght.R.drawable.photo_20220811101907)
+                    .centerCrop()
+                    .resize(150,150)
+                    .into(( holder).imageView);
+           /* Picasso.with(mContext).load(mUriList.get(position)).resize(150,150).centerCrop().into(((ViewHolder) holder).imageView);*/
+        }
+
+
 
     }
 
@@ -52,4 +62,10 @@ public class PhotoRecyclerAdapter extends RecyclerView.Adapter<PhotoRecyclerAdap
             imageView = itemView.findViewById(R.id.iv_rv_item);
         }
     }
+
+    public void setScrolling(boolean scrolling) {
+        isScrolling = scrolling;
+    }
+
+
 }

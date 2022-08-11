@@ -90,6 +90,11 @@ public class RequestCreator {
         return this;
     }
 
+    public RequestCreator centerCrop() {
+        data.centerCrop();
+        return this;
+    }
+
     public RequestCreator fit() {
         deferred = true;
         return this;
