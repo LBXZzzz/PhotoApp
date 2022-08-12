@@ -14,7 +14,7 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:theme="@style/Theme.PhotoApp">
         <activity
-            android:name=".photoActivity"
+            android:name=".PhotoActivity"
             android:exported="false" />
         <activity
             android:name=".MainActivity"

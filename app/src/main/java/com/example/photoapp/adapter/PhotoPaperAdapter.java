@@ -7,13 +7,14 @@ import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
 import androidx.viewpager.widget.PagerAdapter;
+import androidx.viewpager.widget.ViewPager;
 
 import com.example.widght.PhotoImageView;
 
 import java.util.ArrayList;
 
 public class PhotoPaperAdapter extends PagerAdapter {
-    private ArrayList<PhotoImageView> photoImageViews;
+    private final ArrayList<PhotoImageView> photoImageViews;
 
     public PhotoPaperAdapter(ArrayList<PhotoImageView> photoImageViews) {
         this.photoImageViews = photoImageViews;
@@ -40,5 +41,6 @@ public class PhotoPaperAdapter extends PagerAdapter {
         view.addView(photoImageViews.get(position));
         return photoImageViews.get(position);
     }
+
 
 }

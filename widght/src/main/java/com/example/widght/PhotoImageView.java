@@ -5,13 +5,14 @@ import android.animation.ObjectAnimator;
 import android.content.Context;
 
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
+
 import android.graphics.Canvas;
 
 import android.graphics.Paint;
 import android.net.Uri;
 import android.provider.MediaStore;
 import android.util.AttributeSet;
+
 import android.util.Log;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
@@ -20,10 +21,10 @@ import android.widget.ImageView;
 import android.widget.OverScroller;
 
 import androidx.annotation.Nullable;
-import androidx.appcompat.widget.AppCompatImageView;
-import android.annotation.SuppressLint;
-@SuppressLint("AppCompatCustomView")
 
+import android.annotation.SuppressLint;
+
+@SuppressLint("AppCompatCustomView")
 
 
 public class PhotoImageView extends ImageView {
@@ -36,7 +37,7 @@ public class PhotoImageView extends ImageView {
 
     public PhotoImageView(Context context, Uri uri) {
         super(context);
-        this.uri=uri;
+        this.uri = uri;
         init(context);
     }
 
@@ -52,7 +53,7 @@ public class PhotoImageView extends ImageView {
 
     private void init(Context context) {
         this.mGestureDetector = new GestureDetector(context, new PhotoGestureListener());
-        mBitmap=getBitmapFromUri(context,uri);
+        mBitmap = getBitmapFromUri(context, uri);
         mPaint = new Paint();
         mOverScroller = new OverScroller(context);
         mScaleGestureDetector = new ScaleGestureDetector(context, new PhotoScaleGestureListener());
@@ -106,10 +107,10 @@ public class PhotoImageView extends ImageView {
     protected void onSizeChanged(int w, int h, int oldw, int oldh) {
         super.onSizeChanged(w, h, oldw, oldh);
         // 求出初始偏移量，让图片居中
-       inti();
+        inti();
     }
 
-    private void inti(){
+    private void inti() {
         mOriginalOffsetX = (getWidth() - mBitmap.getWidth()) / 2f;
         mOriginalOffsetY = (getHeight() - mBitmap.getHeight()) / 2f;
         if (mBitmap == null) return;
@@ -147,18 +148,18 @@ public class PhotoImageView extends ImageView {
         public boolean onScroll(MotionEvent e1, MotionEvent e2, float distanceX, float distanceY) {
             int pointerCount = e1.getPointerCount();
             if (mCurrentScale > mSmallScale) {
-                if(pointerCount==2){
-                    float x1=e2.getX(0);
-                    float x2=e2.getX(1);
-                    float y1=e2.getY(0);
-                    float y2=e2.getY(1);
-                    float x=(x1+x2)/2f;
-                    float y=(y1+y2)/2f;
-                    mOffsetX=x;
-                    mOffsetY=y;
+                if (pointerCount == 2) {
+                    float x1 = e2.getX(0);
+                    float x2 = e2.getX(1);
+                    float y1 = e2.getY(0);
+                    float y2 = e2.getY(1);
+                    float x = (x1 + x2) / 2f;
+                    float y = (y1 + y2) / 2f;
+                    mOffsetX = x;
+                    mOffsetY = y;
                 }
-                mOffsetX -= distanceX/mCurrentScale;
-                mOffsetY -= distanceY/mCurrentScale;
+                mOffsetX -= distanceX / mCurrentScale;
+                mOffsetY -= distanceY / mCurrentScale;
                 measureOffset();
                 invalidate();
             }
@@ -229,14 +230,14 @@ public class PhotoImageView extends ImageView {
         public boolean onScale(ScaleGestureDetector detector) {
             //通过detector我们可以拿到缩放因子
             mCurrentScale = initialScale * detector.getScaleFactor();
-            if(mCurrentScale>mSmallScale){
-                isBigScale=true;
+            if (mCurrentScale > mSmallScale) {
+                isBigScale = true;
             }
-            if(mCurrentScale>mBigScale*2f){
-                mCurrentScale=mBigScale*2f;
+            if (mCurrentScale > mBigScale * 2f) {
+                mCurrentScale = mBigScale * 2f;
             }
-            if(mCurrentScale<mSmallScale){
-                mCurrentScale=mSmallScale;
+            if (mCurrentScale < mSmallScale) {
+                mCurrentScale = mSmallScale;
             }
             invalidate();
             return false;
@@ -259,12 +260,13 @@ public class PhotoImageView extends ImageView {
 
     @Override
     public boolean dispatchTouchEvent(MotionEvent event) {
-        float i=((mBitmap.getWidth() * mBigScale - getWidth()) / 2f);
-        if(mOffsetX==i||mOffsetX==-i||mCurrentScale==mSmallScale){
+        float i = ((mBitmap.getWidth() * mBigScale - getWidth()) / 2f);
+        if (mOffsetX == i || mOffsetX == -i || mCurrentScale == mSmallScale) {
             getParent().requestDisallowInterceptTouchEvent(false); //父控件可以进行拦截事件`
+            Log.d("zwyrr","hsdafv");
             /*inti();
             invalidate();*/
-        }else {
+        } else {
             getParent().requestDisallowInterceptTouchEvent(true);
         }
         return super.dispatchTouchEvent(event);
@@ -273,9 +275,9 @@ public class PhotoImageView extends ImageView {
     /**
      * 通过uri获取Bitmap对象
      *
-     * @param context
-     * @param uri
-     * @return
+     * @param context:
+     * @param uri:
+     * @return bitmap
      */
     private static Bitmap getBitmapFromUri(Context context, Uri uri) {
         Bitmap bitmap = null;
@@ -290,6 +292,10 @@ public class PhotoImageView extends ImageView {
         return bitmap;
     }
 
-
-
+    public void initAgain(){
+        if(mCurrentScale > mSmallScale){
+            getObjectAnimator().reverse();
+        }
+        isBigScale = !isBigScale;
+    }
 }
