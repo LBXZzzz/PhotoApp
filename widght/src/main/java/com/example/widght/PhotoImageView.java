@@ -262,8 +262,8 @@ public class PhotoImageView extends ImageView {
         float i=((mBitmap.getWidth() * mBigScale - getWidth()) / 2f);
         if(mOffsetX==i||mOffsetX==-i||mCurrentScale==mSmallScale){
             getParent().requestDisallowInterceptTouchEvent(false); //父控件可以进行拦截事件`
-            inti();
-            invalidate();
+            /*inti();
+            invalidate();*/
         }else {
             getParent().requestDisallowInterceptTouchEvent(true);
         }
@@ -288,6 +288,8 @@ public class PhotoImageView extends ImageView {
             e.printStackTrace();
         }
         return bitmap;
-
     }
+
+
+
 }

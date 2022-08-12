@@ -46,7 +46,6 @@ public class PhotoRecyclerAdapter extends RecyclerView.Adapter<PhotoRecyclerAdap
                     .centerCrop()
                     .resize(150,150)
                     .into(( holder).imageView);
-           /* Picasso.with(mContext).load(mUriList.get(position)).resize(150,150).centerCrop().into(((ViewHolder) holder).imageView);*/
         }
         (holder).numberCheckBox.setOnStateChangeListener(new NumberCheckBox.OnOnStateChangeListener() {
             @Override
@@ -75,6 +74,11 @@ public class PhotoRecyclerAdapter extends RecyclerView.Adapter<PhotoRecyclerAdap
             imageView = itemView.findViewById(R.id.iv_rv_item);
             numberCheckBox=itemView.findViewById(R.id.nb_rv_item);
         }
+    }
+
+    @Override
+    public int getItemViewType(int position) {
+        return position;
     }
 
     public void setScrolling(boolean scrolling) {

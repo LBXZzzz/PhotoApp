@@ -56,7 +56,7 @@ public class MainActivity extends AppCompatActivity {
                 // 查看源码可知State有三种状态：SCROLL_STATE_IDLE（静止）、SCROLL_STATE_DRAGGING（上升）、SCROLL_STATE_SETTLING（下落）
                 if (newState == RecyclerView.SCROLL_STATE_IDLE) { // 滚动静止时才加载图片资源，极大提升流畅度
                    photoRecyclerAdapter.setScrolling(false);
-                    photoRecyclerAdapter.notifyDataSetChanged(); // notify调用后onBindViewHolder会响应调用
+                   photoRecyclerAdapter.notifyDataSetChanged(); // notify调用后onBindViewHolder会响应调用
                 } else{
                     photoRecyclerAdapter.setScrolling(true);
                 }
@@ -70,6 +70,7 @@ public class MainActivity extends AppCompatActivity {
                 super.onScrolled(recyclerView, dx, dy);
             }
         });
+
 
         button.setOnClickListener(new View.OnClickListener() {
             @Override
