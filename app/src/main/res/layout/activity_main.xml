@@ -10,16 +10,26 @@
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rv_photo"
         android:layout_width="match_parent"
-        android:layout_weight="1"
-        android:layout_height="0dp"/>
+        android:layout_height="0dp"
+        android:layout_weight="1" />
+
     <Toolbar
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
+
         <Button
             android:id="@+id/bt_photo"
-            android:text="预览"
-            android:textSize="15sp"
             android:layout_width="80dp"
-            android:layout_height="45dp"/>
+            android:layout_height="45dp"
+            android:text="预览"
+            android:textSize="15sp" />
+
+        <Button
+            android:id="@+id/bt_photo_cancel"
+            android:layout_width="150dp"
+            android:layout_height="45dp"
+            android:layout_marginStart="110dp"
+            android:text="取消全部勾选"
+            android:textSize="15sp" />
     </Toolbar>
 </LinearLayout>

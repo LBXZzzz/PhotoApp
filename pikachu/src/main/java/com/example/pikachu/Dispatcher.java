@@ -38,7 +38,8 @@ public class Dispatcher {
     static final int HUNTER_BATCH_COMPLETE = 8;
 
     //Picasso 并不是将每个请求的回调,立即切换到主线程,而是每 200 ms 处理一次
-    private static final int BATCH_DELAY = 200;
+    private static final int BATCH_DELAY = 50;
+
     Dispatcher(Context context, ExecutorService service, Handler mainThreadHandler,
                Cache cache, Stats stats) {
         this.context = context;
@@ -94,16 +95,17 @@ public class Dispatcher {
     void dispatchSubmit(Action action) {
         handler.sendMessage(handler.obtainMessage(REQUEST_SUBMIT, action));
     }
+
     //取消请求
     void dispatchCancel(Action action) {
         handler.sendMessage(handler.obtainMessage(REQUEST_CANCEL, action));
     }
+
     void performSubmit(Action action) {
         performSubmit(action, true);
     }
 
     void performSubmit(Action action, boolean dismissFailed) {
-
         BitmapHunter hunter = hunterMap.get(action.getKey());
         // 根据 Action 对象创建 BitmapHunter 对象, BitmapHunter 实现了 Runnable 接口。
         hunter = BitmapHunter.forRequest(action.getPicasso(), this, cache, stats, action);
@@ -140,17 +142,4 @@ public class Dispatcher {
         }
     }
 
-  /*  private void logBatch(List<BitmapHunter> copy) {
-        if (copy == null || copy.isEmpty()) return;
-        BitmapHunter hunter = copy.get(0);
-        Pikachu pikachu= hunter.getPikachu();
-        if (pikachu.loggingEnabled) {
-            StringBuilder builder = new StringBuilder();
-            for (BitmapHunter bitmapHunter : copy) {
-                if (builder.length() > 0) builder.append(", ");
-                builder.append(Utils.getLogIdsForHunter(bitmapHunter));
-            }
-            log(OWNER_DISPATCHER, VERB_DELIVERED, builder.toString());
-        }
-    }*/
 }

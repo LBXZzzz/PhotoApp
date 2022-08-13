@@ -7,9 +7,7 @@ import android.net.Uri;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
-import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 
 import androidx.annotation.NonNull;
 
@@ -184,7 +182,7 @@ public class Pikachu {
                 cache = new LruCache(context);
             }
             if (service == null) {
-                service = new PicassoExecutorService();
+                service = new PikachuExecutorService();
             }
             if (transformer == null) {
                 transformer = RequestTransformer.IDENTITY;
@@ -234,8 +232,9 @@ public class Pikachu {
 
     void enqueueAndSubmit(Action action) {
         Object target = action.getTarget();
+        //下方代码做了一个判断, Target 已经存在,取消掉对应的请求。
+        // 这个判断很重要, 解决了 ListView/RecyclerView 快速滑动, ImageView 复用导致图片错位的问题。
         if (target != null && targetToAction.get(target) != action) {
-            // This will also check we are on the main thread.
             cancelExistingRequest(target);
             targetToAction.put(target, action);
         }

@@ -83,7 +83,7 @@ public class PhotoRecyclerAdapter extends RecyclerView.Adapter<PhotoRecyclerAdap
     }
 
     /**
-     *判断recyclerview有没有滑动，以便判断是否加载图片
+     * 判断recyclerview有没有滑动，以便判断是否加载图片
      */
     public void setScrolling(boolean scrolling) {
         isScrolling = scrolling;
@@ -91,6 +91,7 @@ public class PhotoRecyclerAdapter extends RecyclerView.Adapter<PhotoRecyclerAdap
 
     /**
      * 供外部获取到recyclerview点击选择的图片uri
+     *
      * @return ArrayList<Uri>
      */
     public ArrayList<Uri> getUri() {

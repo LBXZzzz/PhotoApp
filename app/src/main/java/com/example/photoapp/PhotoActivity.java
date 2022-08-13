@@ -3,7 +3,6 @@ package com.example.photoapp;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.viewpager.widget.ViewPager;
 
-import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
@@ -14,7 +13,7 @@ import com.example.widght.PhotoImageView;
 import java.util.ArrayList;
 
 public class PhotoActivity extends AppCompatActivity {
-    private static final String TAG="PhotoActivity";
+    private static final String TAG = "PhotoActivity";
     ArrayList<String> uriString = new ArrayList<>();
     ArrayList<Uri> uriList = new ArrayList<>();
     ViewPager vp;
@@ -37,31 +36,28 @@ public class PhotoActivity extends AppCompatActivity {
         vp.setAdapter(photoPaperAdapter);
         vp.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             int lastValue = -1;
-            boolean isLeft=true;
+            boolean isLeft = true;
+
             @Override
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-                if(positionOffset!=0){
-                    isLeft=true;
-                    if(lastValue>=positionOffsetPixels){
-                        //右滑
-                        isLeft=false;
-                    }else {
-                        isLeft=true;
-                    }
+                if (positionOffset != 0) {
+                    isLeft = true;
+                    //右滑
+                    isLeft = lastValue < positionOffsetPixels;
                 }
-                lastValue=positionOffsetPixels;
+                lastValue = positionOffsetPixels;
             }
 
             @Override
             public void onPageSelected(int position) {
-                lastValue=-1;
-                if(isLeft){
-                    Log.d(TAG,"左滑");
-                    photoImageViews.get(position-1).initAgain();
+                lastValue = -1;
+                if (isLeft) {
+                    Log.d(TAG, "左滑");
+                    photoImageViews.get(position - 1).initAgain();
 
-                }else {
-                    Log.d(TAG,"右滑");
-                    photoImageViews.get(position+1).initAgain();
+                } else {
+                    Log.d(TAG, "右滑");
+                    photoImageViews.get(position + 1).initAgain();
                 }
             }
 

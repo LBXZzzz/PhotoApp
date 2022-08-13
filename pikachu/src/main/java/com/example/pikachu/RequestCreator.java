@@ -36,6 +36,7 @@ public class RequestCreator {
 
     public void into(ImageView target,Callback callback){
         long started = System.nanoTime();
+        //是否在主线程执行
         checkMain();
         if (target == null) {
             throw new IllegalArgumentException("Target must not be null.");
@@ -65,8 +66,8 @@ public class RequestCreator {
         if (setPlaceholder) {
             PikachuDrawable.setPlaceholder(target, getPlaceholderDrawable());
         }
-
-        Action action = new ImageViewAction(pikachu, target, request, memoryPolicy, networkPolicy, errorResId,
+        // 构建 Action 对象
+        Action<?> action = new ImageViewAction(pikachu, target, request, memoryPolicy, networkPolicy, errorResId,
                 errorDrawable, requestKey, tag, callback, noFade);
         pikachu.enqueueAndSubmit(action);
     }
