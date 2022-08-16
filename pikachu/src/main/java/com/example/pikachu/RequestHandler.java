@@ -25,7 +25,7 @@ public abstract class RequestHandler {
         }
 
         Result(Bitmap bitmap, InputStream stream, Pikachu.LoadedFrom loadedFrom, int exifOrientation) {
-            if (!(bitmap != null ^ stream != null)) {
+            if ((bitmap != null) == (stream != null)) {
                 throw new AssertionError();
             }
             this.bitmap = bitmap;
@@ -98,7 +98,5 @@ public abstract class RequestHandler {
         calculateInSampleSize(reqWidth, reqHeight, options.outWidth, options.outHeight, options,
                 request);
     }
-    int getRetryCount() {
-        return 0;
-    }
+
 }

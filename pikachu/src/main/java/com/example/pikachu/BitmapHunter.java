@@ -31,8 +31,8 @@ public class BitmapHunter implements Runnable {
     Exception exception;
     Pikachu.Priority priority;
     Pikachu.LoadedFrom loadedFrom;
-    Action action;
-    List<Action> actions;
+    Action<?> action;
+    List<Action<?>> actions;
     int exifRotation; // Determined during decoding of original resource.
     Future<?> future;
 
@@ -50,12 +50,12 @@ public class BitmapHunter implements Runnable {
         }
 
         @Override
-        public Result load(Request request, int networkPolicy) throws IOException {
+        public Result load(Request request, int networkPolicy) {
             throw new IllegalStateException("Unrecognized type of request: " + request);
         }
     };
 
-    BitmapHunter(Pikachu pikachu, Dispatcher dispatcher, Cache cache, Stats stats, Action action,
+    BitmapHunter(Pikachu pikachu, Dispatcher dispatcher, Cache cache, Stats stats, Action<?> action,
                  RequestHandler requestHandler) {
         this.sequence = SEQUENCE_GENERATOR.incrementAndGet();
         this.pikachu = pikachu;
@@ -72,7 +72,7 @@ public class BitmapHunter implements Runnable {
     }
 
     static BitmapHunter forRequest(Pikachu pikachu, Dispatcher dispatcher, Cache cache, Stats stats,
-                                   Action action) {
+                                   Action<?> action) {
         Request request = action.getRequest();
         List<RequestHandler> requestHandlers = pikachu.getRequestHandlers();
 
@@ -117,11 +117,6 @@ public class BitmapHunter implements Runnable {
                 loadedFrom = Pikachu.LoadedFrom.MEMORY;
                 return bitmap;
             }
-        }
-
-        if (bitmap != null) {
-            stats.dispatchCacheHit();
-            return bitmap;
         }
 
         //重点:执行网络请求或者从磁盘加载 Bitmap
@@ -230,7 +225,7 @@ public class BitmapHunter implements Runnable {
             } else if (data.centerInside) {
                 float widthRatio = targetWidth / (float) inWidth;
                 float heightRatio = targetHeight / (float) inHeight;
-                float scale = widthRatio < heightRatio ? widthRatio : heightRatio;
+                float scale = Math.min(widthRatio, heightRatio);
                 if (shouldResize(onlyScaleDown, inWidth, inHeight, targetWidth, targetHeight)) {
                     matrix.preScale(scale, scale);
                 }
@@ -291,7 +286,7 @@ public class BitmapHunter implements Runnable {
         return data;
     }
 
-    Action getAction() {
+    Action<?> getAction() {
         return action;
     }
 
@@ -308,11 +303,7 @@ public class BitmapHunter implements Runnable {
         return memoryPolicy;
     }
 
-    Pikachu getPicasso() {
-        return pikachu;
-    }
-
-    List<Action> getActions() {
+    List<Action<?>> getActions() {
         return actions;
     }
 

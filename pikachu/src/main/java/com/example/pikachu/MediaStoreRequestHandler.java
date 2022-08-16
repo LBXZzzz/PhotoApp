@@ -12,7 +12,6 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.provider.MediaStore;
-import android.util.Log;
 
 import java.io.IOException;
 
@@ -72,9 +71,7 @@ public class MediaStoreRequestHandler extends ContentStreamRequestHandler {
     }
 
     static int getExifOrientation(ContentResolver contentResolver, Uri uri) {
-        Cursor cursor = null;
-        try {
-            cursor = contentResolver.query(uri, CONTENT_ORIENTATION, null, null, null);
+        try (Cursor cursor = contentResolver.query(uri, CONTENT_ORIENTATION, null, null, null)) {
             if (cursor == null || !cursor.moveToFirst()) {
                 return 0;
             }
@@ -82,10 +79,6 @@ public class MediaStoreRequestHandler extends ContentStreamRequestHandler {
         } catch (RuntimeException ignored) {
             // If the orientation column doesn't exist, assume no rotation.
             return 0;
-        } finally {
-            if (cursor != null) {
-                cursor.close();
-            }
         }
     }
 

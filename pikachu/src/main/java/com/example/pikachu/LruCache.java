@@ -29,7 +29,7 @@ public class LruCache implements Cache {
             throw new IllegalArgumentException("Max size must be positive.");
         }
         this.maxSize = maxSize;
-        this.map = new LinkedHashMap<String, Bitmap>(0, 0.75f, true);
+        this.map = new LinkedHashMap<>(0, 0.75f, true);
     }
 
     @Override public Bitmap get(String key) {

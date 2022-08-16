@@ -50,11 +50,8 @@ public class Stats {
 
                     break;
                 default:
-                    Pikachu.HANDLER.post(new Runnable() {
-                        @Override
-                        public void run() {
-                            throw new AssertionError("Unhandled stats message." + msg.what);
-                        }
+                    Pikachu.HANDLER.post(() -> {
+                        throw new AssertionError("Unhandled stats message." + msg.what);
                     });
             }
         }

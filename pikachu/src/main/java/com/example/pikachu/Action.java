@@ -10,7 +10,7 @@ abstract class Action<T> {
     static class RequestWeakReference<M> extends WeakReference<M> {
         final Action<?> action;
 
-        public RequestWeakReference(Action action, M referent, ReferenceQueue<? super M> q) {
+        public RequestWeakReference(Action<?> action, M referent, ReferenceQueue<? super M> q) {
             super(referent, q);
             this.action = action;
         }
@@ -35,7 +35,7 @@ abstract class Action<T> {
         this.pikachu = pikachu;
         this.request = request;
         this.target =
-                target == null ? null : new RequestWeakReference<T>(this, target, pikachu.referenceQueue);
+                target == null ? null : new RequestWeakReference<>(this, target, pikachu.referenceQueue);
         this.memoryPolicy = memoryPolicy;
         this.networkPolicy = networkPolicy;
         this.noFade = noFade;
@@ -89,7 +89,4 @@ abstract class Action<T> {
         return request.priority;
     }
 
-    Object getTag() {
-        return tag;
-    }
 }

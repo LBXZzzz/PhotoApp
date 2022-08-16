@@ -102,7 +102,6 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public boolean onTouchEvent(MotionEvent event) {
         mVelocityTracker.addMovement(event);
-        float y=mVelocityTracker.getXVelocity();
         return super.onTouchEvent(event);
     }
 

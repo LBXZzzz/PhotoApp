@@ -50,8 +50,8 @@ public class Dispatcher {
         this.cache = cache;
         this.stats = stats;
         this.handler = new DispatcherHandler(dispatcherThread.getLooper(), this);
-        this.hunterMap = new LinkedHashMap<String, BitmapHunter>();
-        this.batch = new ArrayList<BitmapHunter>(4);
+        this.hunterMap = new LinkedHashMap<>();
+        this.batch = new ArrayList<>(4);
     }
 
     private static class DispatcherHandler extends Handler {
@@ -67,7 +67,7 @@ public class Dispatcher {
             super.handleMessage(msg);
             switch (msg.what) {
                 case REQUEST_SUBMIT:
-                    Action action = (Action) msg.obj;
+                    Action<?> action = (Action<?>) msg.obj;
                     dispatcher.performSubmit(action);
                     break;
                 case HUNTER_COMPLETE: {
@@ -92,21 +92,21 @@ public class Dispatcher {
     }
 
     //提交了action
-    void dispatchSubmit(Action action) {
+    void dispatchSubmit(Action<?> action) {
         handler.sendMessage(handler.obtainMessage(REQUEST_SUBMIT, action));
     }
 
     //取消请求
-    void dispatchCancel(Action action) {
+    void dispatchCancel(Action<?> action) {
         handler.sendMessage(handler.obtainMessage(REQUEST_CANCEL, action));
     }
 
-    void performSubmit(Action action) {
+    void performSubmit(Action<?> action) {
         performSubmit(action, true);
     }
 
-    void performSubmit(Action action, boolean dismissFailed) {
-        BitmapHunter hunter = hunterMap.get(action.getKey());
+    void performSubmit(Action<?> action, boolean dismissFailed) {
+        BitmapHunter hunter;
         // 根据 Action 对象创建 BitmapHunter 对象, BitmapHunter 实现了 Runnable 接口。
         hunter = BitmapHunter.forRequest(action.getPicasso(), this, cache, stats, action);
         // 将任务提交到线程池。这里有个赋值操作,拿到 Future 对象。目的是为了提供取消任务的功能

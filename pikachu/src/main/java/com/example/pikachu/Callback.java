@@ -5,12 +5,4 @@ public interface Callback {
 
     void onError();
 
-    public static class EmptyCallback implements Callback {
-
-        @Override public void onSuccess() {
-        }
-
-        @Override public void onError() {
-        }
-    }
 }

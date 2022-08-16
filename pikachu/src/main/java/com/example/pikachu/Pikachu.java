@@ -35,19 +35,14 @@ public class Pikachu {
     private final List<RequestHandler> requestHandlers;
     final Bitmap.Config defaultBitmapConfig;
     final Stats stats;
-    final Map<Object, Action> targetToAction;
+    final Map<Object, Action<?>> targetToAction;
     final Map<ImageView, DeferredRequestCreator> targetToDeferredRequestCreator;
     boolean indicatorsEnabled;
 
     public interface RequestTransformer {
         Request transformRequest(Request request);
 
-        RequestTransformer IDENTITY = new RequestTransformer() {
-            @Override
-            public Request transformRequest(Request request) {
-                return request;
-            }
-        };
+        RequestTransformer IDENTITY = request -> request;
     }
 
     static void checkMain() {
@@ -59,23 +54,19 @@ public class Pikachu {
     static final Handler HANDLER = new Handler(Looper.getMainLooper()) {
         @Override
         public void handleMessage(@NonNull Message msg) {
-          switch (msg.what){
-              case Dispatcher.HUNTER_BATCH_COMPLETE: {
-                  @SuppressWarnings("unchecked") List<BitmapHunter> batch = (List<BitmapHunter>) msg.obj;
-                  //noinspection ForLoopReplaceableByForEach
-                  for (int i = 0, n = batch.size(); i < n; i++) {
-                      BitmapHunter hunter = batch.get(i);
-                      hunter.pikachu.complete(hunter);
-                  }
-                  break;
-              }
-          }
+            if (msg.what == Dispatcher.HUNTER_BATCH_COMPLETE) {
+                @SuppressWarnings("unchecked") List<BitmapHunter> batch = (List<BitmapHunter>) msg.obj;
+                for (int i = 0, n = batch.size(); i < n; i++) {
+                    BitmapHunter hunter = batch.get(i);
+                    hunter.pikachu.complete(hunter);
+                }
+            }
         }
     };
 
     void complete(BitmapHunter hunter) {
-        Action single = hunter.getAction();
-        List<Action> joined = hunter.getActions();
+        Action<?> single = hunter.getAction();
+        List<Action<?>> joined = hunter.getActions();
 
         boolean hasMultiple = joined != null && !joined.isEmpty();
         boolean shouldDeliver = single != null || hasMultiple;
@@ -94,9 +85,8 @@ public class Pikachu {
         }
 
         if (hasMultiple) {
-            //noinspection ForLoopReplaceableByForEach
             for (int i = 0, n = joined.size(); i < n; i++) {
-                Action join = joined.get(i);
+                Action<?> join = joined.get(i);
                 deliverAction(result, from, join);
             }
         }
@@ -106,7 +96,7 @@ public class Pikachu {
         }
     }
 
-    private void deliverAction(Bitmap result, LoadedFrom from, Action action) {
+    private void deliverAction(Bitmap result, LoadedFrom from, Action<?> action) {
         if (action.isCancelled()) {
             return;
         }
@@ -131,16 +121,16 @@ public class Pikachu {
         this.listener = listener;
         this.transformer = transformer;
         this.dispatcher = dispatcher;
-        this.referenceQueue = new ReferenceQueue<Object>();
+        this.referenceQueue = new ReferenceQueue<>();
         this.defaultBitmapConfig = defaultBitmapConfig;
         this.stats = stats;
-        this.targetToAction = new WeakHashMap<Object, Action>();
-        this.targetToDeferredRequestCreator = new WeakHashMap<ImageView, DeferredRequestCreator>();
+        this.targetToAction = new WeakHashMap<>();
+        this.targetToDeferredRequestCreator = new WeakHashMap<>();
         this.indicatorsEnabled=indicatorsEnabled;
         int builtInHandlers = 7; // Adjust this as internal handlers are added or removed.
         int extraCount = (extraRequestHandlers != null ? extraRequestHandlers.size() : 0);
         List<RequestHandler> allRequestHandlers =
-                new ArrayList<RequestHandler>(builtInHandlers + extraCount);
+                new ArrayList<>(builtInHandlers + extraCount);
         allRequestHandlers.add(new MediaStoreRequestHandler(context));
         requestHandlers = Collections.unmodifiableList(allRequestHandlers);
     }
@@ -212,12 +202,8 @@ public class Pikachu {
         cancelExistingRequest(target);
     }
 
-    void submit(Action action) {
+    void submit(Action<?> action) {
         dispatcher.dispatchSubmit(action);
-    }
-
-    void defer(ImageView view, DeferredRequestCreator request) {
-        targetToDeferredRequestCreator.put(view, request);
     }
 
     Bitmap quickMemoryCacheCheck(String key) {
@@ -230,7 +216,7 @@ public class Pikachu {
         return cached;
     }
 
-    void enqueueAndSubmit(Action action) {
+    void enqueueAndSubmit(Action<?> action) {
         Object target = action.getTarget();
         //下方代码做了一个判断, Target 已经存在,取消掉对应的请求。
         // 这个判断很重要, 解决了 ListView/RecyclerView 快速滑动, ImageView 复用导致图片错位的问题。
@@ -244,7 +230,7 @@ public class Pikachu {
     //取消已经存在的请求
     private void cancelExistingRequest(Object target) {
         checkMain();
-        Action action = targetToAction.remove(target);
+        Action<?> action = targetToAction.remove(target);
         if (action != null) {
             action.cancel();
             dispatcher.dispatchCancel(action);
@@ -278,7 +264,7 @@ public class Pikachu {
 
         final int debugColor;
 
-        private LoadedFrom(int debugColor) {
+        LoadedFrom(int debugColor) {
             this.debugColor = debugColor;
         }
     }

@@ -100,7 +100,7 @@ public class Utils {
         ActivityManager am = getService(context, ACTIVITY_SERVICE);
         boolean largeHeap = (context.getApplicationInfo().flags & FLAG_LARGE_HEAP) != 0;
         int memoryClass = am.getMemoryClass();
-        if (largeHeap && SDK_INT >= HONEYCOMB) {
+        if (largeHeap) {
             memoryClass = ActivityManagerHoneycomb.getLargeMemoryClass(am);
         }
         // Target ~15% of the available heap.
@@ -121,11 +121,7 @@ public class Utils {
 
     static int getBitmapBytes(Bitmap bitmap) {
         int result;
-        if (SDK_INT >= HONEYCOMB_MR1) {
-            result = BitmapHoneycombMR1.getByteCount(bitmap);
-        } else {
-            result = bitmap.getRowBytes() * bitmap.getHeight();
-        }
+        result = BitmapHoneycombMR1.getByteCount(bitmap);
         if (result < 0) {
             throw new IllegalStateException("Negative size: " + bitmap);
         }

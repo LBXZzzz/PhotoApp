@@ -2,9 +2,6 @@ package com.example.pikachu;
 
 import android.graphics.Bitmap;
 import android.net.Uri;
-import android.util.Log;
-
-import java.util.ArrayList;
 
 public class Request {
     /**
@@ -12,7 +9,6 @@ public class Request {
      */
 
     public final Uri uri;
-    int id;
     long started;
     public final int targetWidth;
     public final int targetHeight;
@@ -42,7 +38,7 @@ public class Request {
         private Uri uri;
         private int targetWidth;
         private int targetHeight;
-        private Bitmap.Config config;
+        private final Bitmap.Config config;
         private boolean centerInside;
         private boolean centerCrop;
         private boolean onlyScaleDown;

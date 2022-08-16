@@ -16,7 +16,7 @@ public class PikachuExecutorService extends ThreadPoolExecutor {
 
     public PikachuExecutorService() {
         super(DEFAULT_THREAD_COUNT, DEFAULT_THREAD_COUNT, 0, TimeUnit.MILLISECONDS,
-                new PriorityBlockingQueue<Runnable>(), new Utils.PikachuThreadFactory());
+                new PriorityBlockingQueue<>(), new Utils.PikachuThreadFactory());
     }
 
     void adjustThreadCount(NetworkInfo info) {

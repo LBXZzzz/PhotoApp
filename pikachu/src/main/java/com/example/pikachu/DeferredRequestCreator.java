@@ -5,23 +5,24 @@ import android.widget.ImageView;
 
 import java.lang.ref.WeakReference;
 
-public class DeferredRequestCreator implements ViewTreeObserver.OnPreDrawListener{
+public class DeferredRequestCreator implements ViewTreeObserver.OnPreDrawListener {
     final RequestCreator creator;
     final WeakReference<ImageView> target;
     Callback callback;
 
-         DeferredRequestCreator(RequestCreator creator, ImageView target) {
+    DeferredRequestCreator(RequestCreator creator, ImageView target) {
         this(creator, target, null);
     }
 
     DeferredRequestCreator(RequestCreator creator, ImageView target, Callback callback) {
         this.creator = creator;
-        this.target = new WeakReference<ImageView>(target);
+        this.target = new WeakReference<>(target);
         this.callback = callback;
         target.getViewTreeObserver().addOnPreDrawListener(this);
     }
 
-    @Override public boolean onPreDraw() {
+    @Override
+    public boolean onPreDraw() {
         ImageView target = this.target.get();
         if (target == null) {
             return true;

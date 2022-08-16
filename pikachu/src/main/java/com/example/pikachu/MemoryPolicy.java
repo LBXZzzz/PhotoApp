@@ -3,7 +3,7 @@ package com.example.pikachu;
 public enum MemoryPolicy {
 
     //直接跳过检查内存是否有缓存该图片
-    NO_CACHE(1 << 0),
+    NO_CACHE(1),
     //图片下载之后不在内存中进行缓存
     NO_STORE(1 << 1);
 
@@ -17,7 +17,7 @@ public enum MemoryPolicy {
 
     final int index;
 
-    private MemoryPolicy(int index) {
+    MemoryPolicy(int index) {
         this.index = index;
     }
 }
