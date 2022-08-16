@@ -8,6 +8,7 @@ import android.graphics.Paint;
 import android.graphics.Rect;
 import android.graphics.RectF;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
 
@@ -94,6 +95,7 @@ public class NumberCheckBox extends View {
         isSelect = !isSelect;
         if(isSelect){
             if(numberCheckBoxes.size()<7){
+                Log.d("zswy","dzzd");
                 numberCheckBoxes.add(this);
                 numberText=String.valueOf(numberCheckBoxes.size());
             }else {

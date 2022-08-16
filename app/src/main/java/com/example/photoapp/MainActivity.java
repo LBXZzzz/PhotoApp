@@ -13,6 +13,8 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.util.Log;
+import android.view.MotionEvent;
+import android.view.VelocityTracker;
 import android.widget.Button;
 
 import com.example.photoapp.adapter.PhotoRecyclerAdapter;
@@ -26,12 +28,14 @@ public class MainActivity extends AppCompatActivity {
     static ArrayList<FileImgBean> fileImgBeans;
     //存储所有的图片uri
     static ArrayList<Uri> filePath2 = new ArrayList<>();
+    private VelocityTracker mVelocityTracker;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        mVelocityTracker = VelocityTracker.obtain();
         fileImgBeans = MainActivity.getImgList(this);
         Button button = findViewById(R.id.bt_photo);
         RecyclerView recyclerView = findViewById(R.id.rv_photo);
@@ -45,24 +49,9 @@ public class MainActivity extends AppCompatActivity {
         recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
             public void onScrollStateChanged(@NonNull RecyclerView recyclerView, int newState) {
-                // 查看源码可知State有三种状态：SCROLL_STATE_IDLE（静止）、SCROLL_STATE_DRAGGING（上升）、SCROLL_STATE_SETTLING（下落）
-                if (newState == RecyclerView.SCROLL_STATE_IDLE) { // 滚动静止时才加载图片资源，极大提升流畅度
-                    photoRecyclerAdapter.setScrolling(false);
-                    photoRecyclerAdapter.notifyDataSetChanged(); // notify调用后onBindViewHolder会响应调用
-                } else {
-                    photoRecyclerAdapter.setScrolling(true);
-                }
-
                 super.onScrollStateChanged(recyclerView, newState);
             }
         });
-        recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
-            @Override
-            public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
-                super.onScrolled(recyclerView, dx, dy);
-            }
-        });
-
 
         button.setOnClickListener(v -> {
             ArrayList<String> selectUriStringList = new ArrayList<>();
@@ -70,7 +59,6 @@ public class MainActivity extends AppCompatActivity {
             for (int i = 0; i < selectUriList.size(); i++) {
                 selectUriStringList.add(selectUriList.get(i).toString());
             }
-            Log.d("zwy", String.valueOf(selectUriList.size()));
             Intent intent = new Intent(MainActivity.this, PhotoActivity.class);
             intent.putStringArrayListExtra("selectUriStringList", selectUriStringList);
             startActivity(intent);
@@ -111,5 +99,11 @@ public class MainActivity extends AppCompatActivity {
         return ImagesList;
     }
 
+    @Override
+    public boolean onTouchEvent(MotionEvent event) {
+        mVelocityTracker.addMovement(event);
+        float y=mVelocityTracker.getXVelocity();
+        return super.onTouchEvent(event);
+    }
 
 }

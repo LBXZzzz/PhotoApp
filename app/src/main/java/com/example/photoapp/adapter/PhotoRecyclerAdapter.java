@@ -52,7 +52,9 @@ public class PhotoRecyclerAdapter extends RecyclerView.Adapter<PhotoRecyclerAdap
         //调用numberCheckBox的接口，如果检测到被选中则把uri添加到list集合里面
         (holder).numberCheckBox.setOnStateChangeListener(isSelected -> {
             if (!isSelected) {
-                selectUri.add(uri);
+                if(selectUri.size()<8){
+                    selectUri.add(uri);
+                }
             } else {
                 selectUri.remove(uri);
             }
@@ -97,5 +99,4 @@ public class PhotoRecyclerAdapter extends RecyclerView.Adapter<PhotoRecyclerAdap
     public ArrayList<Uri> getUri() {
         return selectUri;
     }
-
 }
